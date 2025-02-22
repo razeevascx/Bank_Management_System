@@ -1,0 +1,120 @@
+title Banking System Data Model
+
+// Define tables
+customers [icon: user, color: yellow] {
+  customer_id string pk
+  first_name string
+  last_name string
+  date_of_birth date
+  email string
+  phone_number string
+  address string
+}
+
+accounts [icon: credit-card, color: green] {
+  account_id string pk
+  customer_id string fk
+  account_type AccountTypes
+  balance float
+  created_at timestamp
+}
+
+transactions [icon: dollar-sign, color: blue] {
+  transaction_id string pk
+  account_id string fk
+  transaction_type TransactionTypes
+  amount float
+  transaction_date timestamp
+}
+
+loans [icon: briefcase, color: red] {
+  loan_id string pk
+  customer_id string fk
+  loan_type LoanTypes
+  loan_amount float
+  interest_rate float
+  tenure int
+  loan_status LoanStatus
+}
+
+branches [icon: map-pin, color: purple] {
+  branch_id string pk
+  branch_name string
+  branch_address string
+  manager_id string fk
+}
+
+employees [icon: user-check, color: orange] {
+  employee_id string pk
+  branch_id string fk
+  first_name string
+  last_name string
+  role string
+  email string
+  phone_number string
+  salary float
+}
+
+cards [icon: credit-card, color: teal] {
+  card_id string pk
+  customer_id string fk
+  account_id string fk
+  card_type CardTypes
+  card_number string
+  cvv string
+  expiry_date date
+}
+
+loan_repayments [icon: calendar, color: brown] {
+  repayment_id string pk
+  loan_id string fk
+  amount_paid float
+  payment_date date
+  remaining_balance float
+}
+
+// Define Enums
+
+enum AccountTypes {
+  CURRENT_ACCOUNT,
+  FIXED_SAVINGS_ACCOUNT,
+  SAVINGS_ACCOUNT
+}
+
+enum TransactionTypes {
+  DEPOSIT,
+  WITHDRAWAL,
+  TRANSFER,
+  PAYMENT
+}
+
+enum LoanTypes {
+  PERSONAL_LOAN,
+  HOME_LOAN,
+  CAR_LOAN,
+  EDUCATION_LOAN
+}
+
+enum LoanStatus {
+  APPROVED,
+  PENDING,
+  REJECTED,
+  CLOSED
+}
+
+enum CardTypes {
+  CREDIT,
+  DEBIT,
+  PREPAID
+}
+
+// Define relationships
+customers.customer_id < accounts.customer_id
+accounts.account_id < transactions.account_id
+customers.customer_id < loans.customer_id
+loans.loan_id < loan_repayments.loan_id
+branches.branch_id < employees.branch_id
+employees.branch_id < branches.branch_id
+branches.branch_id < customers.customer_id
+customers.customer_id < cards.customer_id
+accounts.account_id < cards.account_id
